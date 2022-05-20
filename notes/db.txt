@@ -1,0 +1,52 @@
+- Transaction: a single unit of works made up of one or multiple db operations
+- makes the unit of work reliable and consistent
+
+- Atomic: All ops are successfull else the tx fails and the db remains unchanged
+- Consistency: db state remains valid after tx (valid constraints, cascades, triggers, etc.)
+- Isolation: all concurrent TXs must not affect each other
+- Durability: data written by TX must be recorded in persistent storage
+
+BEGIN
+[db.BeginTx]
+
+    {normal sql queries}
+    [execTx]
+    - Make permanent and db is changed to a new state
+COMMIT;
+
+BEGIN;
+    {query failure}
+    - changes are discarded and db state persists
+ROLLBACK;
+
+- Utilize, FOR UPDATE clause to perform exclusive locking, a second transaction will wait for the first to finish
+- Multiple columns may reference another column, thus during its update, it must aquire lock to ensure data integrity
+- When two Txs are both waiting for the other to release their lock, deadlock occurs
+- Deadlocks are mostly caused by foreign key constraints
+- FOR NO KEY UPDATE: Not updating the primary key or column of a table not needed
+- $New:(sqlc.arg(_arg))
+{TX1}
+BEGIN;
+    UPDATE BALANCE1=-10;
+    UPDATE BALANCE2=10;
+ROLLBACK;
+{TX1}
+BEGIN;
+    UPDATE BALANCE2=10;
+    UPDATE BALANCE1=10;
+ROLLBACK;
+- Deadlock occurs since as TX1 locks Balance1, Tx2 locks Balance2
+- In the second operation, both transactions have to wait for the other to release locks
+{TX1}
+BEGIN;
+    UPDATE BALANCE1=-10;
+    UPDATE BALANCE2=10;
+ROLLBACK;
+{TX1}
+BEGIN;
+    UPDATE BALANCE1=10;
+    UPDATE BALANCE2=10;
+ROLLBACK;
+- In the 1st case, TX1 locks balance1, therefore Tx2 has to wait for it to commit
+- TX1 updates both balance1&2, commits and releases the lock for TX2 to update
+- QUERY ORDER MATTERS

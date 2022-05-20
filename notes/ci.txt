@@ -1,0 +1,16 @@
+- Workflow: automated procedure made up of one or more jobs
+- Triggered: [manually, scheduled, events]
+GITHUB ACTIONS
+- on: event trigger
+    - branches
+    - schedule : -cron: "*"
+- jobs: A set of steps to be executed in the same runner(run parallel by default, unless they depend on each other)
+    - runner: a server to run the jobs, report progress and logs to github
+    - runs-on: [runner to use]
+    - needs: job depends on another
+    - with: provide input parameters
+
+- steps: individual tasks that run serially in a job
+- id: identifier of a step
+- action: standalone command that run serially in a step, can be reused(uses)
+- | : multiple commands

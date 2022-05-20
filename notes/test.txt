@@ -1,0 +1,4 @@
+- go test -v -cover ./...
+- v: print verbose logs
+- cover: Measure code coverage [red, green]
+- .: run unit tests in all packages

@@ -1,0 +1,9 @@
+- design the database schema
+- pull postgres image, setup postgres container, createdb, connect to tableplus
+- sqlc init, migrate init, run migrations, write sql queries, sqlc generate
+- connect to db(main_test), random data[util], write unit tests[db] #testQueries, assert using go-testify
+- write db transaction(store.go), test TXs(store_test.go)
+- Handle deadlocks(mostly applies in update situations), learn about locks
+- CI/CD: handle continuous chaning code in a shared repository
+- create new workflow, write jobs, add external github actions sevice(-p), 
+- Install golang migrate: github->cli->doc->releases
